@@ -1,0 +1,76 @@
+generator clinet {
+  provider = "prisma-client-js"
+  output = "../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  studentid String  @unique
+  name      String
+  role      Role
+  channel   Int
+  refresh   String? @db.VarChar(1046)
+  queue Queue[]
+}
+
+model Queue {
+  queueid        Int      @id @default(autoincrement())
+  datetime  DateTime      @default(now()) @db.DateTime(1)
+  studentID   String      @unique
+  type      QueueType
+  orders     Int 
+  channel   Int
+  status    QueueStatus
+  rate      Int
+  comment   String
+  user User @relation(fields: [studentID],references: [studentid])
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum QueueType {
+  ONE
+  TWO
+  OTHER
+}
+enum Channel {
+  WAIT
+  ONE
+  TWO
+  THREE
+}
+
+enum QueueStatus {
+  WAIT
+  PROCESS
+  FINISH
+  SKIP
+  STOP
+  CANCEL
+}
+
+
+model History {
+  historyid        Int      @id @default(autoincrement())
+  datetime  DateTime @default(now())
+  studentid    String 
+  queueid Int
+  type      QueueType
+  orders     Int
+  channel   Int
+  rate      Int
+  status    QueueStatus
+  comment   String
+
+}

@@ -1,0 +1,49 @@
+{
+  "dependencies": {
+    "@prisma/client": "5.13.0",
+    "@swc/core": "^1.5.3",
+    "@types/axios": "^0.14.0",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express-session": "^1.18.0",
+    "@types/jsonwebtoken": "^9.0.6",
+    "add": "^2.0.6",
+    "axios": "^1.6.8",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "express-session": "^1.18.0",
+    "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.45",
+    "mysql": "^2.18.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth": "^2.0.0",
+    "path": "^0.12.7",
+    "prisma": "^5.13.0",
+    "rimraf": "^5.0.5",
+    "session": "^0.1.0",
+    "typescript": "^5.4.5"
+  },
+  "build": "tsc",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc"	,
+    "dev": "nodemon ./src/index.ts"
+    
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2"
+  },
+  "name": "DSL-queue-back-end",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "prisma": {
+    "schema": "./src/prisma/schema.prisma"
+  }
+}
