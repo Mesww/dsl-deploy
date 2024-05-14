@@ -76,7 +76,7 @@ async function breakAlert() {
     //Change Status WAIT to STOP
     try {
       const res = await axios.put(
-        `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueupdateAllQueuestatus`,
+        `${process.env.VUE_APP_IP}/queue/getqueueupdateAllQueuestatus`,
         {
           changeStatus: "WAIT",
           status: "STOP",
@@ -122,7 +122,7 @@ function parseJwt(token: string) {
 async function getMyuser() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getSpecificuser?email=${access_token_extract.email}`
+      `${process.env.VUE_APP_IP}/users/getSpecificuser?email=${access_token_extract.email}`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);
@@ -137,7 +137,7 @@ async function getMyuser() {
 async function checkStatusproccess() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueSpecificstatus?status=PROCESS`
+      `${process.env.VUE_APP_IP}/queue/getqueueSpecificstatus?status=PROCESS`
     );
     if (res.status === 200) {
       console.log(res.data);
@@ -157,7 +157,7 @@ async function checkStatusproccess() {
 async function checkStatuswait() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueSpecificstatus?status=WAIT`
+      `${process.env.VUE_APP_IP}/queue/getqueueSpecificstatus?status=WAIT`
     );
     if (res.status === 200) {
       console.log(res.data);
@@ -210,7 +210,7 @@ async function alertBreak() {
         tooglevalue.value = true;
         try {
             const ress = await axios.put(
-        `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueupdateAllQueuestatus`,
+        `${process.env.VUE_APP_IP}/queue/getqueueupdateAllQueuestatus`,
         {
           changeStatus: "STOP",
           status: "WAIT",
@@ -250,7 +250,7 @@ async function checkStatusChange(newStatus: string) {
 async function checkBreak() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueSpecificstatus?status=STOP`
+      `${process.env.VUE_APP_IP}/queue/getqueueSpecificstatus?status=STOP`
     );
     if (res.status === 200) {
       console.log(res.data);

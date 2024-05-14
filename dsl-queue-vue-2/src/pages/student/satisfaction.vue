@@ -36,7 +36,7 @@ function parseJwt(token: string) {
 async function getMyqueue() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getQueueSpecific?studentID=${studentID}`
+      `${process.env.VUE_APP_IP}/queue/getQueueSpecific?studentID=${studentID}`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);
@@ -60,7 +60,7 @@ async function submit() {
   await updateHistory(myqueues.value.queueid,selectedValue.value[0].value);
   try {
     const res = await axios.delete(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueuedeleteQueue?queueid=${myqueues.value.queueid}`
+      `${process.env.VUE_APP_IP}/queue/getqueuedeleteQueue?queueid=${myqueues.value.queueid}`
     );
     if (res.status !== 200) {
       // navigateTo("/student/", { replace: true });
@@ -74,7 +74,7 @@ async function submit() {
 
 async function updateHistory(queueid:number,rate:number) {
   try {
-    const res= await axios.put(`http://localhost:${process.env.VUE_APP_BACK_PORT}/history/getHistoryUpdate`,{
+    const res= await axios.put(`${process.env.VUE_APP_IP}/history/getHistoryUpdate`,{
       queueid:queueid,
       rate:rate
     })

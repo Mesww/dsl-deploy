@@ -86,7 +86,7 @@ function parseJwt(token: string) {
 async function getMyuser() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getSpecificuser?email=${access_token_extract.email}`
+      `${process.env.VUE_APP_IP}/users/getSpecificuser?email=${access_token_extract.email}`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);
@@ -120,7 +120,7 @@ let waitingqueue = [];
 async function fetchQueue() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueDataspecificstatusrefuse?status1=FINISH&status2=SKIP&status3=CANCEL`
+      `${process.env.VUE_APP_IP}/queue/getqueueDataspecificstatusrefuse?status1=FINISH&status2=SKIP&status3=CANCEL`
     );
 
     if (res.status === 200) {
@@ -168,7 +168,7 @@ async function fetchQueue() {
 async function updateHistory(queueid: number, status: string) {
   try {
     const res = await axios.put(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/history/getHistoryUpdate`,
+      `${process.env.VUE_APP_IP}/history/getHistoryUpdate`,
       {
         queueid: queueid,
         status: status,
@@ -210,7 +210,7 @@ async function loadItems(options: any) {
 async function checkIs_called() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getQueueSpecific?channel=${myChannel.value}&status=PROCESS`
+      `${process.env.VUE_APP_IP}/queue/getQueueSpecific?channel=${myChannel.value}&status=PROCESS`
     );
     if (res.status === 200) {
       console.log(res.data);
@@ -239,7 +239,7 @@ async function callAction(row: { queueid: number }) {
   } else {
     try {
       const res = await axios.put(
-        `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueupdateQueuechannel`,
+        `${process.env.VUE_APP_IP}/queue/getqueueupdateQueuechannel`,
         {
           queueid: row.queueid,
           channel: myChannel.value,
@@ -275,7 +275,7 @@ async function skipAction(row: { queueid: number }) {
     //   return;
     // }
     const res = await axios.put(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueUpdatestatus`,
+      `${process.env.VUE_APP_IP}/queue/getqueueUpdatestatus`,
       {
         queueid: row.queueid,
         status: "SKIP",
@@ -306,7 +306,7 @@ async function completeAction(row: { queueid: number }) {
 
   try {
     const res = await axios.put(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueUpdatestatus`,
+      `${process.env.VUE_APP_IP}/queue/getqueueUpdatestatus`,
       {
         queueid: row.queueid,
         status: "FINISH",

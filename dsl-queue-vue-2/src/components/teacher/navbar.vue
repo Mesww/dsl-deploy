@@ -68,7 +68,7 @@ function parseJwt(token: string) {
 async function getMyuser() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getSpecificuser?email=${access_token_extract.email}`
+      `${process.env.VUE_APP_IP}/users/getSpecificuser?email=${access_token_extract.email}`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);

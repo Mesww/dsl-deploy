@@ -41,7 +41,7 @@ async function login() {
         client_id: google_client_id,
         // client_secret: google_client_secret
          scope: "email profile openid",
-            redirect_uri: `http://localhost:${process.env.VUE_APP_BACK_PORT}/auth/callback`,
+            redirect_uri: `${process.env.VUE_APP_IP}/auth/callback`,
             callback: (response: { code: any; }) => {
               if (response.code) {
                  sendCodeToBackend(response.code);
@@ -57,7 +57,7 @@ async function sendCodeToBackend(code:string) {
         const headers = {
           Authorization: code
         };
-        const response = await axios.post(`http://localhost:${process.env.VUE_APP_BACK_PORT}/login/google`, null, { headers });
+        const response = await axios.post(`${process.env.VUE_APP_IP}/login/google`, null, { headers });
         const token = response.data;
         console.log("token: ", token);
         

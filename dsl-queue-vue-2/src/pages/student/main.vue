@@ -119,7 +119,7 @@ const studentID = access_token_extract.email.split("@")[0];
 async function getTeacher() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getAlluser`
+      `${process.env.VUE_APP_IP}/users/getAlluser`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);
@@ -136,7 +136,7 @@ async function getTeacher() {
 async function getFirstmyqueue() {
   try {
     const myqueue = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getQueueSpecific?studentID=${studentID}`
+      `${process.env.VUE_APP_IP}/queue/getQueueSpecific?studentID=${studentID}`
     );
     if (myqueue.status !== 200) {
       throw Error(myqueue.statusText);
@@ -191,7 +191,7 @@ async function changeStatus(row: { queueid: number }) {
     //   return;
     // }
     const res = await axios.put(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueUpdatestatus`,
+      `${process.env.VUE_APP_IP}/queue/getqueueUpdatestatus`,
       {
         queueid: row.queueid,
         status: "STOP",
@@ -242,7 +242,7 @@ function checkStatusChange(newStatus: string) {
 async function checkBreak() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueSpecificstatus?status=STOP`
+      `${process.env.VUE_APP_IP}/queue/getqueueSpecificstatus?status=STOP`
     );
     if (res.status === 200) {
       console.log(res.data);
@@ -262,7 +262,7 @@ async function checkBreak() {
 async function getAllqueue() {
   try {
     const queue = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueDataspecificstatusrefuse?status1=FINISH&status2=SKIP&status3=CANCEL`
+      `${process.env.VUE_APP_IP}/queue/getqueueDataspecificstatusrefuse?status1=FINISH&status2=SKIP&status3=CANCEL`
     );
     if (queue.status !== 200) {
       throw Error(queue.statusText);
@@ -293,7 +293,7 @@ async function getAllqueue() {
 async function updateHistory(queueid: number, status: string) {
   try {
     const res = await axios.put(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/history/getHistoryUpdate`,
+      `${process.env.VUE_APP_IP}/history/getHistoryUpdate`,
       {
         queueid: queueid,
         status: status,
@@ -309,7 +309,7 @@ async function updateHistory(queueid: number, status: string) {
 async function getLeftqueue() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueCountqueuebefore?queueidstring=${myqueueid.value}`
+      `${process.env.VUE_APP_IP}/queue/getqueueCountqueuebefore?queueidstring=${myqueueid.value}`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);
@@ -339,7 +339,7 @@ async function cancelqueue() {
   if (result.isConfirmed) {
     try {
       const res = await axios.delete(
-        `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueuedeleteQueue?queueid=${myqueueid.value}`
+        `${process.env.VUE_APP_IP}/queue/getqueuedeleteQueue?queueid=${myqueueid.value}`
       );
       if (res.status === 200) {
         await updateHistory(myqueueid.value, "CANCEL");
@@ -459,7 +459,7 @@ async function showAlertpass() {
   if (confirm.isConfirmed) {
     try {
       const res = await axios.delete(
-        `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueuedeleteQueue?queueid=${myqueueid.value}`
+        `${process.env.VUE_APP_IP}/queue/getqueuedeleteQueue?queueid=${myqueueid.value}`
       );
       if (res.status === 200) {
         router.push({ name: "student", replace: true });

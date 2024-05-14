@@ -30,7 +30,7 @@ let teacher : Ref<User[]> = ref([])
   async function getqueue(){
     try {
       const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/history/getHistory`
+      `${process.env.VUE_APP_IP}/history/getHistory`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);
@@ -227,7 +227,7 @@ let teacher : Ref<User[]> = ref([])
 async function getAllteacher() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getAlluser`
+      `${process.env.VUE_APP_IP}/users/getAlluser`
     );
     if (res.status !== 200) {
       throw Error(res.statusText)

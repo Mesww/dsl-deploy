@@ -78,7 +78,7 @@ async function createHistory(queue: {
 }) {
   try {
     const response = await axios.post(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/history/getHistoryCreate`,
+      `${process.env.VUE_APP_IP}/history/getHistoryCreate`,
       {
         studentid: queue.studentid,
         type: queue.type,
@@ -105,7 +105,7 @@ async function createQueue(selects: string) {
   console.log(selects + studentID);
   try {
     const response = await axios.post(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueaddQueue`,
+      `${process.env.VUE_APP_IP}/queue/getqueueaddQueue`,
       {
         type: selects,
         studentID: studentID,

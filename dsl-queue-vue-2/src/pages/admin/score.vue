@@ -80,7 +80,7 @@ let allhistory = ref([]);
 async function get_History() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/history/getHistory`
+      `${process.env.VUE_APP_IP}/history/getHistory`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);

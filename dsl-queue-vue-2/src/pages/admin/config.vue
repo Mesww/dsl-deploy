@@ -65,7 +65,7 @@ let admins = ref([]);
 
 async function getAdmin() {
     try {
-        const res = await axios.get(`http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getAlluser`);
+        const res = await axios.get(`${process.env.VUE_APP_IP}/users/getAlluser`);
         if (res.status !==200) {
             throw Error(res.statusText);
         }
@@ -170,7 +170,7 @@ if (formValues) {
 
 async function addTeacher(teacher:{email:string,channel:number}) {
   try {
-    const res = await axios.post(`http://localhost:${process.env.VUE_APP_BACK_PORT}/users/addTeacher`,
+    const res = await axios.post(`${process.env.VUE_APP_IP}/users/addTeacher`,
       {email:teacher.email,channel:teacher.channel}
     );
     if (res.status !== 200) {
@@ -291,7 +291,7 @@ if (formValues) {
 async function deleteTeacher(email:string) {
   console.log(email);
   try {
-    const res = await axios.put(`http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getusereditSpecificuser`,{
+    const res = await axios.put(`${process.env.VUE_APP_IP}/users/getusereditSpecificuser`,{
       email:email,
       data:{
         channel:0,
@@ -338,7 +338,7 @@ async function deleteTeacher(email:string) {
 
 async function editTeacher(teacher:{email:string,channel:number}) {
   try {
-    const res = await axios.put(`http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getusereditSpecificuser`,{
+    const res = await axios.put(`${process.env.VUE_APP_IP}/users/getusereditSpecificuser`,{
       email:teacher.email,
       data:{
         channel:teacher.channel

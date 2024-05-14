@@ -122,7 +122,7 @@ console.log(test);
 async function getTeacher() {
   try {
     const res = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/users/getAlluser`
+      `${process.env.VUE_APP_IP}/users/getAlluser`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);
@@ -139,7 +139,7 @@ async function getTeacher() {
 async function getQueue() {
   try {
     const queue = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getqueueDataspecificstatusrefuse?status1=FINISH&status2=SKIP&status3=CANCEL`
+      `${process.env.VUE_APP_IP}/queue/getqueueDataspecificstatusrefuse?status1=FINISH&status2=SKIP&status3=CANCEL`
     );
     if (queue.status !== 200) {
       throw Error(queue.statusText);
