@@ -95,7 +95,7 @@ function parseJwt(token: string) {
 async function refeshToken(refresh: string) {
   try {
     const res = await axios.post(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/login/refresh`,
+      `${process.env.VUE_APP_IP}/login/refresh`,
       null,
       {
         headers: {
@@ -154,7 +154,7 @@ async function isReserve() {
   const studentid = access_token_extract.email.split("@")[0];
   try {
     const userqueue = await axios.get(
-      `http://localhost:${process.env.VUE_APP_BACK_PORT}/queue/getQueueSpecific?studentID=${studentid}`
+      `${process.env.VUE_APP_IP}/queue/getQueueSpecific?studentID=${studentid}`
     );
     if (userqueue.status !== 200) {
       throw Error(userqueue.statusText);
