@@ -45,20 +45,23 @@ services:
   vue-app:
     build: ./dsl-queue-vue-2
     container_name: vue-app
+    volumes:
+      - ./dsl-queue-vue-2/dist:/usr/share/nginx/html
     expose:
       - "80"
     networks:
       - mynetwork
-
   nginx:
     build:
       context: ./nginx
       dockerfile: Dockerfile
     container_name: nginx
+    volumes:
+      - ./dsl-queue-vue-2/dist:/usr/share/nginx/html
     ports:
       - "80:80"
     depends_on:
-      - vue-app
+      # - vue-app
       - api
     networks:
       - mynetwork
@@ -66,3 +69,7 @@ services:
 networks:
   mynetwork:
     driver: bridge
+
+volumes:
+  vue-build:
+    
