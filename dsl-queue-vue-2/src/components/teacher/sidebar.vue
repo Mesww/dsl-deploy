@@ -14,11 +14,11 @@
   
       <h3 >Menu</h3>
       <div class="menu">
-        <router-link to="/teacher/home" class="button">
+        <router-link to="/monitor/home" class="button">
           <v-icon class="iconsidebar">mdi-home-circle-outline</v-icon>
           <span class="text">เรียกคิว</span>
         </router-link>
-        <router-link to="/teacher/dashboard" class="button">
+        <router-link to="/monitor/dashboard" class="button">
           <v-icon class="iconsidebar">mdi-chart-box-outline</v-icon>
           <span class="text">แดชบอร์ด</span>
         </router-link>

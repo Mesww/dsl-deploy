@@ -2,9 +2,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import StudentView from "../pages/student/index.vue";
 import LoginView from "../pages/login/index.vue";
 import AdminView from "../pages/admin/index.vue";
-import TeacherView from "../pages/teacher/index.vue";
-import TeacherHome from "../pages/teacher/home.vue";
-import TeacherDashboard from "../pages/teacher/dashboard.vue";
+import monitorView from "../pages/teacher/index.vue";
+import monitorHome from "../pages/teacher/home.vue";
+import monitorDashboard from "../pages/teacher/dashboard.vue";
 import StudentMain from "../pages/student/main.vue";
 import StudentSatisfaction from "../pages/student/satisfaction.vue";
 import AdminHome from "../pages/admin/home.vue";
@@ -55,19 +55,19 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: "/teacher",
-    name: "teacher",
-    component: TeacherView,
+    path: "/monitor",
+    name: "monitor",
+    component: monitorView,
     children: [
       {
-        path: "/teacher/home",
-        name: "teacherhome",
-        component: TeacherHome,
+        path: "/monitor/home",
+        name: "monitorhome",
+        component: monitorHome,
       },
       {
-        path: "/teacher/dashboard",
-        name: "teacherdashboard",
-        component: TeacherDashboard,
+        path: "/monitor/dashboard",
+        name: "monitordashboard",
+        component: monitorDashboard,
       },
     ],
   },
@@ -209,8 +209,8 @@ router.beforeEach(async (to, from, next) => {
       console.log("GET OUT!");
 
       next({ name: "root" });
-    } else if (to.name === "teacher" && isRole("TEACHER") === false) {
-      console.log("you aren't teacher");
+    } else if (to.name === "monitor" && isRole("monitor") === false) {
+      console.log("you aren't monitor");
       next({ name: "root" });
     } else if (
       (await isReserve()) === true &&
