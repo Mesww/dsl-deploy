@@ -78,7 +78,7 @@ async function sendCodeToBackend(code:string) {
             router.push({name:"adminhome",replace:true})
             break;
           case "TEACHER":
-            router.push({name:"teacherhome",replace:true})
+            router.push({name:"monitorhome",replace:true})
             break;
           default:
             throw Error("Role not found");
