@@ -91,6 +91,8 @@ export async function addQueue(queue: { studentID: string; type: QueueType }) {
   }
   let orderCounter =  (lastOrder[0].lastOrder || 0) + 1;
 
+  
+
   const res = await prisma.queue.create({
     data: {
       studentID: queue.studentID,

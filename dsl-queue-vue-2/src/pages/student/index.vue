@@ -98,10 +98,15 @@ async function createHistory(queue: {
   }
 }
 
+async function findStudentid(email:string) {
+  
+}
+
 async function createQueue(selects: string) {
   const accesstoken = cookies.get("accesstoken");
   const access_token_extract = parseJwt(accesstoken);
   const studentID = access_token_extract.email.split("@")[0];
+
   console.log(selects + studentID);
   try {
     const response = await axios.post(

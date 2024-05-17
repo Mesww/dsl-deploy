@@ -175,6 +175,7 @@ async function checkStatuswait() {
   }
 }
 
+
 async function alertBreak() {
   const results = await Swal.fire({
         title: "กำลังพักระบบ!",

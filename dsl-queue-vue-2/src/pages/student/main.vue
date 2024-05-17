@@ -31,7 +31,7 @@
             <div class="flex items-center">
               <v-icon icon="mdi-account" size="x-large" class="mr-3"></v-icon>
               <!-- <p>{{ techerchannel[index] === undefined  || techerchannel[index] === null && techerchannel[index].channel === teacher.channel ? 0 : techerchannel[index].orders}}</p> -->
-              <p
+              <!-- <p
                 v-if="
                   techerchannel[index] === undefined ||
                   techerchannel[index] === null
@@ -39,10 +39,10 @@
               >
                 {{ 0 }}
               </p>
-              <p v-else-if="techerchannel[index].channel === undefined">0</p>
-              <p v-else-if="techerchannel[index].channel === teacher.channel">
-                {{ techerchannel[index].channel }}
-              </p>
+              <p v-else-if="techerchannel[index].channel === undefined">0</p> -->
+              <!-- <p v-else-if="techerchannel[index].channel === teacher.channel"> -->
+                {{ findQueue(teacher.channel) }}
+              <!-- </p> -->
             </div>
           </div>
         </div>
@@ -74,7 +74,7 @@ let channel3 = ref(0);
 let leftqueue = ref(0);
 let myqueueid = ref(0);
 let myqueueorder = ref(0);
-let allqueue = ref();
+let allqueue = ref([]);
 let status_ = ref("");
 let channel = ref(0);
 let timer = 3000;
@@ -88,6 +88,20 @@ let techerchannel: Ref<Teacherchannel[]> = ref([
     orders: 0,
   },
 ]);
+
+
+function findQueue(channel:number) :number{
+  console.log(channel);
+
+  const allqueues =  allqueue.value.filter((value)=>{
+    return value.channel === channel && value.status === "PROCESS";
+  })
+  if (allqueues[0] === undefined || allqueues[0] === null ) {
+    return 0;
+  }
+  console.log(allqueues);
+  return allqueues[0].orders;
+}
 
 function parseJwt(token: string) {
   var base64Url = token.split(".")[1];
@@ -285,6 +299,7 @@ async function getAllqueue() {
 
     console.log(loading.value);
     console.log(queue);
+    allqueue.value = queue.data;
   } catch (error) {
     console.error(error);
   }
