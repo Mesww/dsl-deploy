@@ -98,14 +98,28 @@ async function createHistory(queue: {
   }
 }
 
-async function findStudentid(email:string) {
-  
+async function getMystudentID(email:string) {
+  try {
+    const res = await axios.get(
+      `${process.env.VUE_APP_IP}/users/getSpecificuser?email=${email}`
+    );
+    if (res.status !== 200) {
+      throw Error(res.statusText);
+    }
+    if (res.data === null) {
+      throw Error("No Student id");
+    }
+    return res.data.studentid;
+  } catch (error) {
+    console.error(error);
+  }
 }
+
 
 async function createQueue(selects: string) {
   const accesstoken = cookies.get("accesstoken");
   const access_token_extract = parseJwt(accesstoken);
-  const studentID = access_token_extract.email.split("@")[0];
+  const studentID = await getMystudentID(access_token_extract.email);
 
   console.log(selects + studentID);
   try {

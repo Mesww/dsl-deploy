@@ -148,10 +148,28 @@ async function isAuthenticated() {
   return true;
 }
 
+async function getMystudentID(email:string) {
+  try {
+    const res = await axios.get(
+      `${process.env.VUE_APP_IP}/users/getSpecificuser?email=${email}`
+    );
+    if (res.status !== 200) {
+      throw Error(res.statusText);
+    }
+    if (res.data === null) {
+      throw Error("No Student id");
+    }
+    return res.data.studentid;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 async function isReserve() {
   const accesstoken = cookies.get("accesstoken");
   const access_token_extract = parseJwt(accesstoken);
-  const studentid = access_token_extract.email.split("@")[0];
+  const studentid = await getMystudentID(access_token_extract.email);
   try {
     const userqueue = await axios.get(
       `${process.env.VUE_APP_IP}/queue/getQueueSpecific?studentID=${studentid}`

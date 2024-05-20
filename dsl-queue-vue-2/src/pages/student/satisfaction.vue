@@ -11,9 +11,25 @@ const { cookies } = useCookies();
 
 const accesstoken = cookies.get("accesstoken");
 const access_token_extract = parseJwt(accesstoken);
-const studentID = access_token_extract.email.split("@")[0];
-let myqueues = ref([]);
 
+let studentID = ref("");
+let myqueues = ref([]);
+async function getMystudentID() {
+  try {
+    const res = await axios.get(
+      `${process.env.VUE_APP_IP}/users/getSpecificuser?email=${access_token_extract.email}`
+    );
+    if (res.status !== 200) {
+      throw Error(res.statusText);
+    }
+    if (res.data === null) {
+      throw Error("No Student id");
+    }
+    return res.data.studentid;
+  } catch (error) {
+    console.error(error);
+  }
+}
 let selectedValue = ref([
   { Question: "โปรดให้คะแนนความพึงพอใจการให้บริการ", value: 5 },
 ]);
@@ -34,9 +50,10 @@ function parseJwt(token: string) {
 }
 
 async function getMyqueue() {
+  studentID.value = await getMystudentID();
   try {
     const res = await axios.get(
-      `${process.env.VUE_APP_IP}/queue/getQueueSpecific?studentID=${studentID}`
+      `${process.env.VUE_APP_IP}/queue/getQueueSpecific?studentID=${studentID.value}`
     );
     if (res.status !== 200) {
       throw Error(res.statusText);
@@ -85,6 +102,7 @@ async function updateHistory(queueid:number,rate:number) {
     console.error(error);
   }
 };
+onMounted(getMystudentID);
 onMounted(getMyqueue);
 </script>
 

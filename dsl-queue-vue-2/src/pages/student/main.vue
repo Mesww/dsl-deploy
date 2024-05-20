@@ -30,19 +30,7 @@
             <v-img class="" alt="Ellipse" src="../../assets/Ellipse16.png" />
             <div class="flex items-center">
               <v-icon icon="mdi-account" size="x-large" class="mr-3"></v-icon>
-              <!-- <p>{{ techerchannel[index] === undefined  || techerchannel[index] === null && techerchannel[index].channel === teacher.channel ? 0 : techerchannel[index].orders}}</p> -->
-              <!-- <p
-                v-if="
-                  techerchannel[index] === undefined ||
-                  techerchannel[index] === null
-                "
-              >
-                {{ 0 }}
-              </p>
-              <p v-else-if="techerchannel[index].channel === undefined">0</p> -->
-              <!-- <p v-else-if="techerchannel[index].channel === teacher.channel"> -->
                 {{ findQueue(teacher.channel) }}
-              <!-- </p> -->
             </div>
           </div>
         </div>
@@ -128,8 +116,29 @@ let inter = setInterval(() => {
 const accesstoken = cookies.get("accesstoken");
 const access_token_extract = parseJwt(accesstoken);
 // console.log(access_token_extract);
-const studentID = access_token_extract.email.split("@")[0];
 
+async function getMystudentID() {
+  try {
+    const res = await axios.get(
+      `${process.env.VUE_APP_IP}/users/getSpecificuser?email=${access_token_extract.email}`
+    );
+    if (res.status !== 200) {
+      throw Error(res.statusText);
+    }
+    if (res.data === null) {
+      throw Error("No Student id");
+    }
+
+    studentID.value = res.data.studentid;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+let studentID = ref("");
+
+
+console.log( "studentId : ",studentID.value);
 async function getTeacher() {
   try {
     const res = await axios.get(
@@ -139,7 +148,7 @@ async function getTeacher() {
       throw Error(res.statusText);
     }
     teachers.value = res.data.filter((value: User) => {
-      return value.role === "TEACHER";
+      return value.role === "TEACHER" ||value.role === "ADMIN" && value.channel !== 0 ;
     });
     console.log(teachers.value);
   } catch (error) {
@@ -150,7 +159,7 @@ async function getTeacher() {
 async function getFirstmyqueue() {
   try {
     const myqueue = await axios.get(
-      `${process.env.VUE_APP_IP}/queue/getQueueSpecific?studentID=${studentID}`
+      `${process.env.VUE_APP_IP}/queue/getQueueSpecific?studentID=${studentID.value}`
     );
     if (myqueue.status !== 200) {
       throw Error(myqueue.statusText);
@@ -171,7 +180,7 @@ console.log(exitingqueue.value);
 // getMyqueue();
 async function getMyqueue() {
   try {
-    console.log("studentID : ", studentID);
+    console.log("studentID : ", studentID.value);
     const myqueue = await getFirstmyqueue();
     const checkbreaks = await checkBreak();
     console.log(myqueue.data[0]);
@@ -487,6 +496,7 @@ async function showAlertpass() {
   }
 }
 onMounted(getTeacher);
+onMounted(getMystudentID);
 onMounted(getAllqueue);
 onMounted(getExitingqueue);
 onMounted(getMyqueue);
