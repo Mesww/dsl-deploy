@@ -34,15 +34,8 @@
             </td>
           </tr>
         </tbody>
-      </table>
-       <!-- ป๊อปอัพเพิ่มผู้ดูแล -->
-    <div v-if="showAddAdminPopup" class="popup">
-      <form @submit.prevent="addAdmin">
-        <input type="email" v-model="newAdmin.email" placeholder="อีเมล" required>
-        <button class="btn-green" type="submit">เพิ่ม</button>
-        <button class="btn-red" @click="closeAddAdminPopup">ยกเลิก</button>
-      </form>
-    </div>
+     </table>
+    <v-btn color="red" @click="goTomonitor">ไปหน้าเจ้าหน้าที่</v-btn>
   </div>
   </div>
 </template>
@@ -51,8 +44,27 @@
 import { computed, onMounted, ref } from "vue";
 import Swal from 'sweetalert2';
 import axios from "axios";
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+const accesstoken = cookies.get("accesstoken");
+const access_token_extract = parseJwt(accesstoken);
+let isMonitor = ref(false);
+import router from "@/router";
 
-
+function parseJwt(token: string) {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+  return JSON.parse(jsonPayload);
+}
 const showAddAdminPopup = ref(false);
 const newAdmin = ref({
   username: "",
@@ -63,6 +75,16 @@ const newAdmin = ref({
 
 let admins = ref([]);
 
+function goTomonitor() {
+  console.log(isMonitor.value);
+  if (isMonitor.value) {
+   console.log("you are monitor");
+   router.push({ name: "monitorhome"});
+   return;
+  }
+  Swal.fire({title:"กรุณาเพิ่มคุณเป็นเจ้าหน้าที่ดูแลระบบก่อน",icon:"error",showConfirmButton:false,showDenyButton:true,denyButtonText:"ยกเลิก"})
+}
+
 async function getAdmin() {
     try {
         const res = await axios.get(`${process.env.VUE_APP_IP}/users/getAlluser`);
@@ -72,7 +94,11 @@ async function getAdmin() {
         const admin = ref([]);
         console.log(res.data);
         res.data.forEach((value:any)=>{
-          if(value.role === "TEACHER"){
+          if(value.role === "TEACHER" || value.role === "ADMIN" && value.channel !== 0){
+            if(value.email === access_token_extract.email){
+              // console.log("ismonitor");
+              isMonitor.value = true;
+            }
             admin.value.push(value);
           }
         })
@@ -283,14 +309,24 @@ if (formValues) {
     color: "#191771",
   });
   if (result.isConfirmed) {
-    await deleteTeacher(index.email);
+    await deleteTeacher(index.email,index.role);
     await getAdmin();
   }
 };
 
-async function deleteTeacher(email:string) {
+async function deleteTeacher(email:string,role:string) {
   console.log(email);
   try {
+    if(role === "ADMIN"){
+      const res = await axios.put(`${process.env.VUE_APP_IP}/users/getusereditSpecificuser`,{
+      email:email,
+      data:{
+        channel:0,
+      }
+    })
+    isMonitor.value = false;
+    return;
+    }
     const res = await axios.put(`${process.env.VUE_APP_IP}/users/getusereditSpecificuser`,{
       email:email,
       data:{

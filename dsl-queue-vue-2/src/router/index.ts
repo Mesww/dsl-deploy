@@ -179,7 +179,7 @@ async function isReserve() {
 function isRole(role: string) {
   const accesstoken = cookies.get("accesstoken");
   const access_token_extract = parseJwt(accesstoken);
-  // console.log(access_token_extract.role);
+  console.log(access_token_extract.role);
   if (access_token_extract.role === role) {
     return true;
   }
@@ -199,17 +199,26 @@ router.beforeEach(async (to, from, next) => {
     next({ name: "root" });
   } else if (isAuth) {
     console.log("authenticated");
+    // isRole("ADMIN");
 
-    if (to.name === "admin" && isRole("ADMIN") === false) {
+    const accesstoken = cookies.get("accesstoken");
+    const access_token_extract = parseJwt(accesstoken);
+    console.log(access_token_extract.role);
+
+    if (
+    to.name === "admin" 
+    || to.name==="adminhome" 
+    && access_token_extract.role !== "ADMIN") {
+      
       console.log("you aren't admin");
-
       cookies.remove("accesstoken");
       cookies.remove("refreshtoken");
-
       console.log("GET OUT!");
-
       next({ name: "root" });
-    } else if (to.name === "monitor" && isRole("monitor") === false) {
+    } else if (to.name === "monitor" && access_token_extract.role !== "TEACHER") {
+      if (access_token_extract.role === "ADMIN") {
+        return;
+      }
       console.log("you aren't monitor");
       next({ name: "root" });
     } else if (

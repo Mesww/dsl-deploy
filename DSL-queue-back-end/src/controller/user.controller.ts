@@ -51,6 +51,16 @@ export const addTeacher = asynchandler(async (req: any, res: any) => {
   const { email, channel } = req.body;
   const is_include = await getSpecificuser({ email: email });
   if (is_include !== null) {
+    if (is_include.role === "ADMIN") {
+      // !if teacher is admin self
+      const edituser = await editSpecificuser({
+        email: email,
+        data: {
+          channel: channel,
+        },
+      });
+      return res.status(200).send(edituser);
+    }
     const edituser = await editSpecificuser({
       email: email,
       data: {

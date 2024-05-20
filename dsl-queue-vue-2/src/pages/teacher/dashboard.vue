@@ -128,7 +128,7 @@ async function getTeacher() {
       throw Error(res.statusText);
     }
     teachers.value = res.data.filter((value: User) => {
-      return value.role === "TEACHER";
+      return value.role === "TEACHER" || value.role === "ADMIN" && value.channel !== 0;
     });
     console.log(teachers.value);
   } catch (error) {

@@ -6,8 +6,8 @@
         <h1 class="text-red ml-5  mt-auto mb-auto">กดเพื่อพักระบบ</h1>
       </div>
       <div class="head items-center md:flex" > <h1 class=" text-white py-5 px-3"> ช่องบริการที่ {{myChannel}}</h1> </div>
-
     </div>
+    <v-btn v-if="is_admin" color="red" @click="goToadmin">ไปหน้าadmin</v-btn>
       <queuetable />
   </div>
 </template>
@@ -20,7 +20,10 @@ import { onMounted, ref } from "vue";
 let tooglevalue = ref(true);
 let timer = 5000;
 
-
+function goToadmin() {
+  //  console.log("you are monitor");
+   router.push({ name: "adminhome"});
+}
 let inter = setInterval(() => {
   checkBreak();
 }, timer);
@@ -99,12 +102,16 @@ async function breakAlert() {
 }
 
 import { useCookies } from "vue3-cookies";
+import router from "@/router";
 let myChannel =ref(0);
 
 
 const { cookies } = useCookies();
 const accesstoken = cookies.get("accesstoken");
 const access_token_extract = parseJwt(accesstoken);
+
+let is_admin = access_token_extract.role === "ADMIN";
+
 function parseJwt(token: string) {
   var base64Url = token.split(".")[1];
   var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");

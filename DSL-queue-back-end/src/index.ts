@@ -41,13 +41,14 @@ app.listen(port, function () {
 async function ringout() {
   setInterval(async () => {
     const now = new Date();
+    console.log(`${now.getHours()} : ${now.getMinutes()} : ${now.getSeconds()}`);
     if (
-      now.getHours() === 23 &&
-      now.getMinutes() === 0 &&
+      now.getHours() === 21 &&
+      now.getMinutes() === 59 &&
       now.getSeconds() === 0
     ) {
       console.log("Resetting queue order...");
       await resetQueueOrder();
     }
-  }, 3600000); // ตรวจสอบทุกๆ 1 ชั่วโมง (3600000 มิลลิวินาที)
+  }, 1000); // ตรวจสอบทุกๆ 1 ชั่วโมง (3600000 มิลลิวินาที)
 }
