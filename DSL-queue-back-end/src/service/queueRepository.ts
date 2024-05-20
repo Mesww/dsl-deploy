@@ -1,7 +1,8 @@
 import { Prisma } from "@prisma/client/extension";
 import prisma from "../prisma/client";
 import { Role, QueueType, QueueStatus } from "@prisma/client";
-
+import * as fs from 'fs';
+import * as resets from '../../config/reset.json';
 let reset = false;
 
 
@@ -85,10 +86,11 @@ export async function addQueue(queue: { studentID: string; type: QueueType }) {
     console.log(lastOrder[0]);
     reset = false
   }else{
-    lastOrder =  await prisma.$queryRaw`
-    SELECT MAX(orders) AS lastOrder FROM Queue;
+    lastOrder = await prisma.$queryRaw`
+    SELECT MAX(orders) AS lastOrder FROM Queue WHERE status NOT IN ('FINISH', 'SKIP');
   `;
   }
+
   let orderCounter =  (lastOrder[0].lastOrder || 0) + 1;
 
   
