@@ -27,6 +27,7 @@ import axios from 'axios';
 import { useCookies } from "vue3-cookies";
 import router from "@/router";
 import Swal from 'sweetalert2';
+import { ref } from 'vue';
 const { cookies } = useCookies();
 console.log(process.env.VUE_APP_BACK_PORT);
 const google_client_id = process.env.VUE_APP_GOOGLE_CLIENT_ID;
@@ -75,6 +76,11 @@ async function sendCodeToBackend(code:string) {
             router.push({name:"student",replace:true})
             break;
           case "ADMIN":
+          //  alert( await getAdmin(access_token_extract));
+            if ((await getAdmin(access_token_extract))) {
+              router.push({name:"monitorhome",replace:true});
+              break;
+            }
             router.push({name:"adminhome",replace:true})
             break;
           case "TEACHER":
@@ -109,6 +115,32 @@ function parseJwt(token: string) {
   );
   return JSON.parse(jsonPayload);
 }
+
+
+async function getAdmin(access_token_extract:any) {
+    try {
+        const res = await axios.get(`${process.env.VUE_APP_IP}/users/getAlluser`);
+        if (res.status !==200) {
+            throw Error(res.statusText);
+        }
+        const admin = ref([]);
+        console.log(res.data);
+        let ismonitor = false;
+        res.data.forEach((value:any)=>{
+          if(value.role === "TEACHER" || value.role === "ADMIN" && value.channel !== 0){
+            if(value.email === access_token_extract.email){
+              console.log("ismonitor");
+              ismonitor = true;;
+            }
+          }
+        })
+        return ismonitor;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
 
 </script>
 

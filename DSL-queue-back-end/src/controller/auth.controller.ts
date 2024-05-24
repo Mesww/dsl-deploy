@@ -83,7 +83,7 @@ export const googleauth = asynchandler(
     // ! if database hasn't current user
     // ? --------------------------------- test login admin ---------------------------------
 
-    if (userDetails.email === "6431501102@lamduan.mfu.ac.th") {
+    if (userDetails.email === "6431501102@lamduan.mfu.ac.th" || userDetails.email === "boosaya.cha@mfu.ac.th" ) {
       // !random studentid for admin
       const studentid = await randomstudentid("0", userDetails.email);
       console.log(studentid);
