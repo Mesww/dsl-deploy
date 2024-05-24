@@ -50,5 +50,5 @@ async function ringout() {
       console.log("Resetting queue order...");
       await resetQueueOrder();
     }
-  }, 1000); // ตรวจสอบทุกๆ 1 ชั่วโมง (3600000 มิลลิวินาที)
+  }, 60000); // ตรวจสอบทุกๆ 1 ชั่วโมง (3600000 มิลลิวินาที)
 }

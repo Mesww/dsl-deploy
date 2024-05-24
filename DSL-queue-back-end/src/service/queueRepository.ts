@@ -1,10 +1,9 @@
 import { Prisma } from "@prisma/client/extension";
 import prisma from "../prisma/client";
 import { Role, QueueType, QueueStatus } from "@prisma/client";
-import * as fs from 'fs';
-import * as resets from '../../config/reset.json';
+import * as fs from "fs";
+import * as resets from "../../config/reset.json";
 let reset = false;
-
 
 export async function getAllqueues() {
   // const allQueues = await prisma.queue.findMany();
@@ -60,40 +59,71 @@ export async function getSpecificstatusrefuse(queue: {
     where: {
       NOT: {
         // !finde rows are not including queue.status1 or queue.status2
-        OR: [{ status: queue.status1 }, { status: queue.status2 },{status:queue.status3}],
+        OR: [
+          { status: queue.status1 },
+          { status: queue.status2 },
+          { status: queue.status3 },
+        ],
       },
     },
   });
   return res;
 }
-export async function getSpecificstatus(queue: {
-  status: QueueStatus;
-}) {
+export async function getSpecificstatus(queue: { status: QueueStatus }) {
   const res = await prisma.queue.findMany({
     where: {
-      status :queue.status
+      status: queue.status,
     },
   });
   return res;
 }
+
+async function findQueuetoday() {
+   // Define custom date range
+// Get today's date
+const today = new Date();
+today.setHours(0, 0, 0, 0); // Start of the day
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
+
+  // Fetch history entries where datetime is within today's range
+  const historyEntries = await prisma.history.findMany({
+    where: {
+      datetime: {
+        gte: today,
+        lt: tomorrow,
+      },
+      NOT: {
+        status: "RESET",
+      },
+    },
+  });
+  // console.log(historyEntries);
+  return historyEntries;
+}
+
 export async function addQueue(queue: { studentID: string; type: QueueType }) {
   // Get the current maximum value of the orders column
-  let lastOrder: { lastOrder: number }[] = [{
-    lastOrder: 0
-  }];
+  let lastOrder: { lastOrder: number }[] = [
+    {
+      lastOrder: 0,
+    },
+  ];
+  let queueToday = (await findQueuetoday()).length;
+  console.log(`Queuetoday : ${queueToday}`);
+  // lastOrder[0].lastOrder = (await findQueuetoday()).length;
   if (reset === true) {
-    lastOrder[0].lastOrder = 0
-    console.log(lastOrder[0]);
-    reset = false
-  }else{
-    lastOrder = await prisma.$queryRaw`
-    SELECT MAX(orders) AS lastOrder FROM Queue WHERE status NOT IN ('FINISH', 'SKIP');
-  `;
+
+    queueToday = 0;
+    reset = false;
   }
+  // else{
+  //   lastOrder = await prisma.$queryRaw`
+  //   SELECT MAX(orders) AS lastOrder FROM Queue WHERE status NOT IN ('RESET');
+  // `;
+  // }
 
-  let orderCounter =  (lastOrder[0].lastOrder || 0) + 1;
-
-  
+  let orderCounter = (queueToday || 0) + 1;
 
   const res = await prisma.queue.create({
     data: {
@@ -107,6 +137,21 @@ export async function addQueue(queue: { studentID: string; type: QueueType }) {
       comment: "",
     },
   });
+  // create history
+  await prisma.history.create({
+    data: {
+      queueid: res.queueid,
+      studentid: queue.studentID,
+      datetime: new Date(),
+      type: queue.type,
+      channel: 0,
+      orders: orderCounter,
+      status: QueueStatus.WAIT,
+      rate: 0,
+      comment: "",
+    },
+  });
+
   console.log("queueid : " + `${res.queueid}`);
   return res;
 }
@@ -114,20 +159,37 @@ export async function addQueue(queue: { studentID: string; type: QueueType }) {
 export async function resetQueueOrder() {
   // ? set reset true for reset new order to 1
   reset = true;
+  // Get today's date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Start of the day
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
+ 
   const res = await prisma.queue.updateMany({
-    where:{
-      NOT:{ 
-        AND:[{
-          status:"FINISH"
-        },{
-          status:"SKIP"
-        }  ]
-      }
+    where: {
+      NOT: {
+        status: "RESET",
+      },
     },
-    data:{
-      status: "FINISH"
-    }
-  })
+    data: {
+      status: "RESET",
+    },
+  });
+
+  await prisma.history.updateMany({
+    where: {
+      datetime: {
+        gte: today,
+        lt: tomorrow,
+      },
+      NOT: {
+        status: "RESET",
+      },
+    },
+    data: {
+      status: "RESET",
+    },
+  });
 }
 
 export async function updateQueuestatus(queue: {
@@ -181,7 +243,7 @@ export async function getCountqueuebefore(queue: { queueid: number }) {
     const result = await prisma.queue.count({
       where: {
         status: {
-          notIn: ["FINISH", "SKIP"], // Assuming 'FINISH' means completed
+          notIn: ["FINISH", "SKIP","RESET"], // Assuming 'FINISH' means completed
         },
         queueid: {
           lte: queue.queueid,

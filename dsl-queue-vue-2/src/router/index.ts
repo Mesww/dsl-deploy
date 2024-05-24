@@ -207,7 +207,6 @@ function isRole(role: string) {
 
 
 router.beforeEach(async (to, from, next) => {
-
   console.log("isAuthen", await isAuthenticated());
   const isAuth = await isAuthenticated();
   // ! check if path isn't "/" and authenticated

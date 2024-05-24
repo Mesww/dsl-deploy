@@ -94,7 +94,7 @@ async function get_History() {
       }  `;
     });
     history.value = history.value.filter((value) => {
-      return value.status === "FINISH";
+      return value.status === "FINISH" || value.rate !== 0 ;
     });
     // ! backup history
     allhistory.value = history.value; 

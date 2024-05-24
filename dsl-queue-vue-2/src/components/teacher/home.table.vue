@@ -120,7 +120,7 @@ let waitingqueue = [];
 async function fetchQueue() {
   try {
     const res = await axios.get(
-      `${process.env.VUE_APP_IP}/queue/getqueueDataspecificstatusrefuse?status1=FINISH&status2=SKIP&status3=CANCEL`
+      `${process.env.VUE_APP_IP}/queue/getqueueDataspecificstatusrefuse?status1=FINISH&status2=SKIP&status3=RESET`
     );
 
     if (res.status === 200) {

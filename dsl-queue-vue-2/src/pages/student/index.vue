@@ -134,12 +134,12 @@ async function createQueue(selects: string) {
     if (response.status === 200) {
       console.log(response.data);
       console.log("CREATED");
-      await createHistory({
-        studentid: studentID,
-        type: selects,
-        orders: response.data.orders,
-        queueid:response.data.queueid
-      });
+      // await createHistory({
+      //   studentid: studentID,
+      //   type: selects,
+      //   orders: response.data.orders,
+      //   queueid:response.data.queueid
+      // });
       router.push({ name: "studentmain", replace: true });
     } else {
       throw Error("Connection error");

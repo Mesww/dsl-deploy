@@ -245,7 +245,7 @@ function checkStatusChange(newStatus: string) {
   if (exitingstatus === newStatus) {
     return;
   }
-  if (newStatus === "FINISH") {
+  if (newStatus === "FINISH" || newStatus === "RESET" ) {
     showSuccessalert();
   } else if (newStatus === "SKIP") {
     showAlertpass();

@@ -58,6 +58,7 @@ enum QueueStatus {
   SKIP
   STOP
   CANCEL
+  RESET
 }
 
 

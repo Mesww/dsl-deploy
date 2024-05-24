@@ -37,6 +37,7 @@ export const testrandomstudenid = asynchandler(async (req: any, res: any) => {
 // ! autheication function
 export const googleauth = asynchandler(
   async (req: { headers: { authorization: any } }, res: any) => {
+   
     const code = req.headers.authorization;
     // console.log(typeof code);
     console.log("Authorization Code:", code);
