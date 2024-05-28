@@ -119,6 +119,22 @@ teachers.value.forEach((t)=>{
   })
 })
 console.log(test);
+
+async function getHistorytoday() {
+  try {
+    const res = await axios.get(
+      `${process.env.VUE_APP_IP}/history/getHistorytoday`
+    );
+    if (res.status !== 200) {
+      throw Error(res.statusText);
+    }
+    is_over.value = res.data.length;
+    console.log( "is_over ",is_over.value);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function getTeacher() {
   try {
     const res = await axios.get(
@@ -144,7 +160,7 @@ async function getQueue() {
     if (queue.status !== 200) {
       throw Error(queue.statusText);
     }
-    is_over.value = queue.data.length - 1;
+    // is_over.value = queue.data.length - 1;
     let x: Teacherchannel[] = [];
     console.log(is_over.value);
     teachers.value.forEach((teacher) => {
@@ -159,7 +175,6 @@ async function getQueue() {
 
         if (lastqueue !== undefined && lastqueue !== null) {
           console.log(lastqueue?.channel);
-
           lastchannel = lastqueue.channel;
           lastchannelqueueid.value = lastqueue.orders;
         }
@@ -191,9 +206,13 @@ function findQueue(channel:number) :number{
 
 onMounted(getQueue);
 onMounted(getTeacher);
+onMounted(getHistorytoday);
 
 // Call getQueue() every 1 minute
-setInterval(getQueue, 5000);
+setInterval(function () {
+  getQueue();
+  getHistorytoday();
+}, 5000);
 </script>
 <style lang="scss" scoped>
 * {

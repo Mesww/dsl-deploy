@@ -7,6 +7,29 @@ export async function getHistory() {
   return await prisma.history.findMany();
 }
 
+export async function getHistorytoday() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Start of the day
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
+  return await prisma.history.findMany({
+    where: {
+      datetime: {
+        gte: today,
+        lt: tomorrow,
+      },
+      NOT: {
+        status: {
+          in:[
+            "RESET"
+          ]
+        }
+        
+      },
+    },
+  });
+}
+
 export async function addHistory(history: {
   queueid: number;
   studentid: string;
@@ -51,7 +74,7 @@ export async function updateHistory(history: {
       rate: history.rate,
       status: history.status,
       type: history.type,
-      channel:history.channel
+      channel: history.channel,
     },
   });
   return res;

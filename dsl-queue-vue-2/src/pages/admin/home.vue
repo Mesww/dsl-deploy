@@ -233,7 +233,7 @@ async function getAllteacher() {
       throw Error(res.statusText)
     }
     teacher.value = res.data.filter((value:User)=>{
-      return value.role === "TEACHER";
+      return value.role === "TEACHER" || value.role === "ADMIN" && value.channel !== 0;
     });
 
   } catch (error) {

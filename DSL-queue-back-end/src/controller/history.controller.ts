@@ -3,7 +3,7 @@ const asynchandler = require("express-async-handler");
 
 import { $Enums } from "@prisma/client";
 
-import { getHistory, addHistory, updateHistory } from "../service/historyRepository";
+import { getHistory, addHistory, updateHistory, getHistorytoday } from "../service/historyRepository";
 import moment from "moment";
 
 // HistoryData.ts
@@ -14,6 +14,11 @@ export const histroyData = asynchandler(async (req: any, res: any) => {
   });
   res.status(200).send(gethistoryData);
 });
+
+export const historyToday = asynchandler(async (req:any,res:any) => {
+  const historytoday = await getHistorytoday();
+  res.status(200).send(historytoday);
+})
 
 // historyCreate.post.ts
 export const historyCreate = asynchandler(async (req: any, res: any) => {
