@@ -2,6 +2,8 @@ import axios from "axios";
 
 export async function auth(code: string) {
   console.log("Authorization Code : ", code);
+  console.log(process.env.GOOGLE_CLIENT_ID);
+  console.log(process.env.GOOGLE_CLIENT_SECRET);
   const response = await axios.post("https://oauth2.googleapis.com/token", {
     code,
     client_id: process.env.GOOGLE_CLIENT_ID,
@@ -9,6 +11,7 @@ export async function auth(code: string) {
     redirect_uri: "postmessage",
     grant_type: "authorization_code",
   });
+  
   
   const accessToken = response.data.access_token;
   console.log("Access Token:", accessToken);
