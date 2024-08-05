@@ -28,10 +28,10 @@ services:
     build: ./DSL-queue-back-end
     environment:
        PORT: 8886
-       VUE_APP_GOOGLE_CLIENT_ID: 104159606172-s0po212319hq48u8k9cn0cr6ga59pg7n.apps.googleusercontent.com
+       VUE_APP_GOOGLE_CLIENT_ID: 41414213646-47832k2hh6vj65l245kkai2ik0uj42t2.apps.googleusercontent.com
        DATABASE_URL: mysql://root:1234@db:3306/dslqueueDatabase
-       GOOGLE_CLIENT_ID: 104159606172-s0po212319hq48u8k9cn0cr6ga59pg7n.apps.googleusercontent.com
-       GOOGLE_CLIENT_SECRET: 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
+       GOOGLE_CLIENT_ID: 41414213646-47832k2hh6vj65l245kkai2ik0uj42t2.apps.googleusercontent.com
+       GOOGLE_CLIENT_SECRET: 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
        ACCESS_SECRET: ACCESS_SECRET_ANG_JAAA
        REFRESH_SECRET: REFRESH_SECRET_ANG_JAAA
     ports:
