@@ -79,12 +79,12 @@ export async function getSpecificstatus(queue: { status: QueueStatus }) {
 }
 
 async function findQueuetoday() {
-   // Define custom date range
-// Get today's date
-const today = new Date();
-today.setHours(0, 0, 0, 0); // Start of the day
-const tomorrow = new Date(today);
-tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
+  // Define custom date range
+  // Get today's date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Start of the day
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
 
   // Fetch history entries where datetime is within today's range
   const historyEntries = await prisma.history.findMany({
@@ -94,13 +94,14 @@ tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
         lt: tomorrow,
       },
       NOT: {
-        status: "RESET",
+        status: { in: ["RESET"] },
       },
     },
   });
   // console.log(historyEntries);
   return historyEntries;
 }
+
 
 export async function addQueue(queue: { studentID: string; type: QueueType }) {
   // Get the current maximum value of the orders column
@@ -113,7 +114,6 @@ export async function addQueue(queue: { studentID: string; type: QueueType }) {
   console.log(`Queuetoday : ${queueToday}`);
   // lastOrder[0].lastOrder = (await findQueuetoday()).length;
   if (reset === true) {
-
     queueToday = 0;
     reset = false;
   }
@@ -164,7 +164,7 @@ export async function resetQueueOrder() {
   today.setHours(0, 0, 0, 0); // Start of the day
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1); // Start of the next day
- 
+
   const res = await prisma.queue.updateMany({
     where: {
       NOT: {
@@ -243,7 +243,7 @@ export async function getCountqueuebefore(queue: { queueid: number }) {
     const result = await prisma.queue.count({
       where: {
         status: {
-          notIn: ["FINISH", "SKIP","RESET"], // Assuming 'FINISH' means completed
+          notIn: ["FINISH", "SKIP", "RESET"], // Assuming 'FINISH' means completed
         },
         queueid: {
           lte: queue.queueid,

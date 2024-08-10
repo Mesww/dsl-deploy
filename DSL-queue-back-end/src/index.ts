@@ -43,12 +43,12 @@ async function ringout() {
     const now = new Date();
     console.log(`${now.getHours()} : ${now.getMinutes()} : ${now.getSeconds()}`);
     if (
-      now.getHours() === 21 &&
-      now.getMinutes() === 59 &&
+      now.getHours() === 23 &&
+      now.getMinutes() === 22 &&
       now.getSeconds() === 0
     ) {
       console.log("Resetting queue order...");
       await resetQueueOrder();
     }
-  }, 60000); // ตรวจสอบทุกๆ 1 ชั่วโมง (3600000 มิลลิวินาที)
+  }, 1000); // ตรวจสอบทุกๆ 1 ชั่วโมง (3600000 มิลลิวินาที)
 }
