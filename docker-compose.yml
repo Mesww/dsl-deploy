@@ -11,6 +11,8 @@ services:
     networks:
       - mynetwork
     restart: unless-stopped
+    volumes:
+      - ./db:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -51,6 +53,7 @@ services:
       - "80"
     networks:
       - mynetwork
+  
   nginx:
     build:
       context: ./nginx
@@ -72,4 +75,5 @@ networks:
 
 volumes:
   vue-build:
+
     
