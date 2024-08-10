@@ -1,6 +1,7 @@
 <template lang="">
   <div class="app">
-    <main>
+    <Loading :is-loading="loading" />
+    <main v-if="!loading">
       <div class="flex">
         <v-text-field
           v-model="search"
@@ -48,11 +49,14 @@
 <script lang="ts" setup>
 import axios, { all } from "axios";
 import { ref, computed,shallowRef } from "vue";
+import Loading from '../../components/loading/loading.vue';
+
 let history = ref([]);
 let search = ref("");
 let menu = ref(false);
 let selectedDate = ref(null);
 let date = shallowRef<string | string[]>();
+let loading = ref(true);
 
 const column = ref([
   {
@@ -104,6 +108,7 @@ async function get_History() {
     });
     // ! backup history
     allhistory.value = history.value;
+    loading.value = false;
   } catch (error) {
     console.error(error);
   }
