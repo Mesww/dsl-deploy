@@ -30,13 +30,10 @@ import Swal from 'sweetalert2';
 import { ref } from 'vue';
 const { cookies } = useCookies();
 console.log(process.env.VUE_APP_BACK_PORT);
+console.log( "ip ");
 const google_client_id = process.env.VUE_APP_GOOGLE_CLIENT_ID;
-// console.log(google_client_id);
-// function alerts() {
-//     alert("test");
-// }
 async function login() {
-    // alert(google_client_id);
+
     googleSdkLoaded((google:any) =>{
     google.accounts.oauth2.initCodeClient({
         client_id: google_client_id,
@@ -54,10 +51,11 @@ async function login() {
     });
 }
 async function sendCodeToBackend(code:string) {
-    try {
+  try {
         const headers = {
           Authorization: code
         };
+   
         const response = await axios.post(`${process.env.VUE_APP_IP}/login/google`, null, { headers });
         const token = response.data;
         console.log("token: ", token);

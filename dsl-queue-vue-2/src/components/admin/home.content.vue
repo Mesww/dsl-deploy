@@ -1,5 +1,5 @@
 <template>
-  <v-card  v-if="props.data.type === Charttype.Bar " height="500"   width="500">
+  <v-card  v-if="props.data.type === Charttype.Bar " height="300"   width="500">
     <template v-slot:title>
       <span class="font-weight-black">{{props.data.title}}</span>
     </template>
@@ -11,7 +11,7 @@
     />  
     </template>
   </v-card>
-  <v-card  v-if="props.data.type === Charttype.Doughnut"  height="500"  width="500">
+  <v-card  v-if="props.data.type === Charttype.Doughnut"  height="320"  width="300">
     <template v-slot:title>
       <span class="font-weight-black">{{props.data.title}}</span>
     </template>
@@ -23,7 +23,7 @@
     />  
     </template>
   </v-card>
-  <v-card  v-if="props.data.type === Charttype.Line" height="500"   width="500">
+  <v-card  v-if="props.data.type === Charttype.Line" height="300"   width="500">
     <template v-slot:title>
       <span class="font-weight-black">{{props.data.title}}</span>
     </template>
@@ -35,7 +35,7 @@
     />  
     </template>
   </v-card>
-  <v-card  v-if="props.data.type === Charttype.Pie"  height="500"  width="500">
+  <v-card  v-if="props.data.type === Charttype.Pie"  height="320"  width="300">
     <template v-slot:title>
       <span class="font-weight-black">{{props.data.title}}</span>
     </template>
