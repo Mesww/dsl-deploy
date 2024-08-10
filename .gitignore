@@ -2,3 +2,4 @@ node_modules
 
 .env
 db/
+dsl-queue-vue-2/dist/
