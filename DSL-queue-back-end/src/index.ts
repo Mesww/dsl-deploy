@@ -43,9 +43,9 @@ async function ringout() {
     const now = new Date();
     console.log(`${now.getHours()} : ${now.getMinutes()} : ${now.getSeconds()}`);
     if (
-      now.getHours() === 23 &&
-      now.getMinutes() === 22 &&
-      now.getSeconds() === 0
+      now.getHours() >= 23 &&
+      now.getMinutes() >= 22 &&
+      now.getSeconds() >= 0
     ) {
       console.log("Resetting queue order...");
       await resetQueueOrder();
