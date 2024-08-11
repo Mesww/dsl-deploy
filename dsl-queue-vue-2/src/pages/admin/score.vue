@@ -121,7 +121,7 @@ function convertType(type: string): string {
 }
 
 function exportToCSV() {
-  const csvContent = convertToCSV(history.value);
+  const csvContent = convertToCSV(filteredHistory.value);
   const blob = new Blob([csvContent], { type: "text/csv" });
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);

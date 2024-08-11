@@ -142,6 +142,7 @@ function convertType(type: string): string {
 }
 
 function exportToCSV() {
+  // console.log(filteredHistory.value);
   const csvContent = convertToCSV(filteredHistory.value);
   const blob = new Blob([csvContent], { type: "text/csv" });
   const link = document.createElement("a");
