@@ -112,13 +112,13 @@ function updateQueueClass(allQueues: any[]) {
     }
   }
 }
-let test: Teacherchannel[] = [];
-teachers.value.forEach((t)=>{
- test = channel.value.filter((value) => {
-          return value.channel === t.channel ;
-  })
-})
-console.log(test);
+// let test: Teacherchannel[] = [];
+// teachers.value.forEach((t)=>{
+//  test = channel.value.filter((value) => {
+//           return value.channel === t.channel ;
+//   })
+// })
+// console.log(test);
 
 async function getHistorytoday() {
   try {
@@ -166,8 +166,7 @@ async function getQueue() {
     teachers.value.forEach((teacher) => {
       console.log("Teacher ", teacher.channel);
       queue.data.forEach((queues: { channel: number; orders: number }) => {
-        console.log("Queue ", queues.channel);
-        
+        // console.log("Queue ", queues.channel);
 
         let lastqueue = queue.data.findLast(
           (item: { status: string }) => item.status === "PROCESS"
@@ -186,7 +185,7 @@ async function getQueue() {
     if (channel.value.length > 0) {
       is_loading.value = true;
     }
-    console.log("channel : ", channel.value);
+    // console.log("channel : ", channel.value);
   } catch (error) {
     console.error(error);
   }

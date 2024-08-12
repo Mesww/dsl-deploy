@@ -4,10 +4,9 @@
       <h1 class="font-bold text-white mr-2">มีคิวที่รอเกิน </h1>
       <h1 class="font-bold text-red-500 mr-2">10</h1>
       <h1 class="font-bold text-white">นาทีแล้ว</h1>
-
     </div>
   </marquee>
-
+  <v-btn color="red" @click="speakThai('เทส')">testsound</v-btn>
   <v-data-table-server
     v-model:items-per-page="items_per_page"
     :headers="headers"
@@ -16,7 +15,7 @@
     :loading="loading"
     @update:options="loadItems"
     style="width: 80vw; height: 70vh"
-    class="mb-10"
+    class="mb-2"
   >
     <template v-slot:item.actions="{ item }">
       <v-btn
@@ -47,6 +46,44 @@
       </v-btn>
     </template>
   </v-data-table-server>
+
+  
+  <div :class="showVolumeControl ? 'volume-control-container mb-2': 'volume-control-container-off mb-2'  ">
+    <v-btn @click="toggleVolumeControl" variant="text" class="text-white mr-2">
+      ระดับเสียง
+      <v-icon color="white" size="x-large" >{{ showVolumeControl ? 'mdi-chevron-left' : 'mdi-chevron-right' }}</v-icon>
+    </v-btn>
+
+    <v-expand-x-transition>
+      <div v-if="showVolumeControl" class="d-flex align-center" style="width: 100%;">
+        <v-slider
+          v-model="volume"
+          @update:modelValue="changeVolume"
+          min="0"
+          max="1"
+          step="0.1"
+          hide-details
+          class="mx-2"
+          style="width: 150px;"
+          color="red"
+          thumb-color="white"
+          >
+          <template v-slot:prepend>
+            <v-btn
+          size="small"
+          variant="text"
+          @click="toggleMute"
+          class="mr-2 "
+        >
+          <v-icon color="white" :icon="volume > 0 ? 'mdi-volume-high' : 'mdi-volume-off'" />
+        </v-btn>
+          </template>
+        </v-slider>
+
+        <span class="text-white ml-2">{{ Math.round(volume * 100) }}%</span>
+      </div>
+    </v-expand-x-transition>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -65,8 +102,14 @@ let loading = ref(false);
 let timer = 5000;
 let isover = ref(false);
 
+const audioPlayer = ref<HTMLAudioElement | null>(null)
+const volume = ref(1) 
+const tooglevalue = ref(true);
+const showVolumeControl = ref(false)
+
 const accesstoken = cookies.get("accesstoken");
 const access_token_extract = parseJwt(accesstoken);
+
 
 function parseJwt(token: string) {
   var base64Url = token.split(".")[1];
@@ -92,7 +135,7 @@ async function getMyuser() {
       throw Error(res.statusText);
     }
     myChannel.value = res.data.channel;
-    console.log("mychannel ", myChannel);
+    // console.log("mychannel ", myChannel);
   } catch (error) {
     console.error(error);
   }
@@ -138,7 +181,7 @@ async function fetchQueue() {
       });
 
       waitingqueue = x;
-      console.log(waitingqueue);
+      // console.log(waitingqueue);
       if (waitingqueue.length >= 1) {
         console.log(waitingqueue);
         const queuebelow = new Date(waitingqueue[0].datetime).getTime();
@@ -154,7 +197,7 @@ async function fetchQueue() {
       }
 
       loading.value = true;
-      console.log("allqueue : ", res.data.length);
+      // console.log("allqueue : ", res.data.length);
     } else {
       throw Error(`${res.status}`);
     }
@@ -184,7 +227,7 @@ async function updateHistory(queueid: number, status: string) {
 }
 
 
-console.log(queue.value);
+// console.log(queue.value);
 
 function convertType(type: string): string {
   switch (type) {
@@ -227,7 +270,54 @@ async function checkIs_called() {
   }
 }
 
+// ================== Audio Player ==================
+const toggleVolumeControl = () => {
+  showVolumeControl.value = !showVolumeControl.value
+}
+const changeVolume = (newVolume: number) => {
+  // Ensure the volume is between 0 and 1
+  volume.value = Math.max(0, Math.min(1, newVolume))
+  if (audioPlayer.value) {
+    audioPlayer.value.volume = volume.value
+  }
+}
+const toggleMute = () => {
+  if (audioPlayer.value) {
+    if (audioPlayer.value.volume > 0) {
+      volume.value = audioPlayer.value.volume // Store the current volume
+      changeVolume(0) // Mute
+    } else {
+      changeVolume(volume.value > 0 ? volume.value : 1) // Unmute to previous volume or max
+    }
+  }
+}
+const speakThai =  async (thaiText:string) => {
+  try {
+    const response = await fetch(`${process.env.VUE_APP_IP}/queue/getSpeakQueue`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: thaiText }),
+    })
 
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    const blob = await response.blob()
+    const audioUrl = URL.createObjectURL(blob)
+    if (audioPlayer.value) {
+      audioPlayer.value.src = audioUrl
+      audioPlayer.value.volume = volume.value 
+     await audioPlayer.value.play()
+    }else{
+      console.error('Audio player not initialized')
+    }
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+// ================== End Audio Player ==================
 
 async function callAction(row: { queueid: number }) {
   console.log(row.queueid);
@@ -254,8 +344,7 @@ async function callAction(row: { queueid: number }) {
         console.log("success");
         if (queue.value && updatedItemIndex !== -1) {
           queue.value[updatedItemIndex].channel = myChannel.value;
-          // console.log(queue.value);
-          // console.log("success");
+          speakThai(`คิวที่${queue.value[updatedItemIndex].orders}กรุณามาที่ช่องบริการที่${queue.value[updatedItemIndex].channel}`)
         }
       } else {
         throw Error(res.statusText);
@@ -325,7 +414,9 @@ async function completeAction(row: { queueid: number }) {
 }
 onMounted(getMyuser);
 onMounted(fetchQueue);
-
+onMounted(() => {
+  audioPlayer.value = new Audio()
+})
 function start() {
   inter = setInterval(() => {
     fetchQueue();
@@ -337,4 +428,22 @@ function stop(interval: number | undefined) {
 }
 </script>
 
-<style scope lang="scss"></style>
+<style scope lang="scss">
+.volume-control-container {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 20px;
+  transition: max-width 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+.volume-control-container-off{
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 20px;
+  transition: max-width 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0.7;
+}
+</style>

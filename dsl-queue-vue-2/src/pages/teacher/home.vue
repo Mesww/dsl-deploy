@@ -59,8 +59,6 @@ async function breakAlert() {
     })
   }
 
-  
-
   const result = await Swal.fire({
     title: "คุณแน่ใจใช่ไหม?",
     text: "คุณกำลังจะพักระบบ!",
