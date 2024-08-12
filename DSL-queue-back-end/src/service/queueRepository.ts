@@ -4,6 +4,8 @@ import { Role, QueueType, QueueStatus } from "@prisma/client";
 import * as fs from "fs";
 import * as resets from "../../config/reset.json";
 let reset = false;
+const gTTS = require("gtts");
+import stream from "stream";
 
 export async function getAllqueues() {
   // const allQueues = await prisma.queue.findMany();
@@ -101,7 +103,6 @@ async function findQueuetoday() {
   // console.log(historyEntries);
   return historyEntries;
 }
-
 
 export async function addQueue(queue: { studentID: string; type: QueueType }) {
   // Get the current maximum value of the orders column
@@ -258,6 +259,8 @@ export async function getCountqueuebefore(queue: { queueid: number }) {
     await prisma.$disconnect();
   }
 }
+
+
 
 export async function deleteQueue(queue: { queueid: number }) {
   const res = await prisma.queue.delete({
